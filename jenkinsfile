@@ -10,6 +10,7 @@ pipeline {
 
                 sh'''
                     echo hello world
+                    echo hi bharath from hello world
 
                 '''
             }
