@@ -38,7 +38,7 @@ pipeline {
 
                 stage('e2e') {
                     steps {
-                        'echo e2e tests ran'
+                        sh 'echo e2e tests ran'
                     }
                 }
             }
