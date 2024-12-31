@@ -39,4 +39,9 @@ pipeline{
             }
         }
     }
+    post{
+        always {
+            juint 'test-results/juint.xml'
+        }
+    }
  }
