@@ -41,7 +41,7 @@ pipeline{
                         npm test
                         '''
                     } 
-                     post{
+                    post{
                         always {
                             juint 'jest-results/junit.xml'
                 }
