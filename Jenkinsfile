@@ -2,6 +2,7 @@ pipeline {
 
    agent any
    environment {
+       NETLIFY_SITE_ID = "d6eac577-66f8-48e9-a7b4-40cf80439874"
        DOCKER_HOST = 'unix:///var/run/docker.sock' // Set DOCKER_HOST environment variable
    }
 
@@ -56,6 +57,7 @@ pipeline {
                sh '''
                    npm install netlify-cli
                    node_modules/.bin/netlify --version
+                   echo "Deploying to site ID: $NETLIFY_SITE_ID"
                '''
            }
        }       
