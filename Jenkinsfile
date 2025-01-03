@@ -37,11 +37,21 @@ pipeline {
                    }
                }
 
-               stage('e2e') {
-                   steps {
-                       sh 'echo e2e tests ran'
+        stage('E2E') {
+                agent{
+                    docker {
+                        image 'mcr.microsoft.com/playeright:v1.39.0-jammy'
+                        reverseNode true
+                    }
+                }
+                steps {
+                       sh '''
+                       echo e2e tests ran
+                       npx playwrite test --reporter=html
+                       '''
+
                    }
-               }
+             }
            }
        }
 
