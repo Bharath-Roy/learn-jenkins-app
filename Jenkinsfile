@@ -31,19 +31,36 @@ pipeline {
        }
       
 
-       stage('Tests') {
+        stage('Tests') {
            parallel {
-               stage('Unit tests') {
+        stage('Unit tests') {
                    steps {
                        echo 'unit tests ran'
                    }
                }
 
-               stage('E2E') {
+        stage('E2E') {
                    steps {
                        sh 'echo e2e tests ran'
                    }
                }
+               stage('Prod E2E'){
+                agent{
+                    docker{
+                        image 'mcr.microsoft.com/playwright:v1.49.1-noble'
+                        reuseNode true
+                    }
+                }
+                environment {
+                    CI_ENVIRONMENT_URL ="https://peaceful-daffodil-303af5.netlify.app"
+                }
+                steps {
+                    sh '''
+                        npm playwright test --reporter=html
+                    '''
+                }
+               }
+
            }
        }
 
