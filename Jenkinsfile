@@ -46,6 +46,8 @@ pipeline {
                 }
                 steps {
                        sh '''
+                       npm install -g serve
+                       serve -s build
                        echo e2e tests ran
                        npx playwrite test --reporter=html
                        '''
