@@ -41,7 +41,7 @@ pipeline {
                 agent{
                     docker {
                         image 'mcr.microsoft.com/playeright:v1.39.0-jammy'
-                        reverseNode true
+                        reuseNode true
                     }
                 }
                 steps {
