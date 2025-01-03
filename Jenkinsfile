@@ -33,13 +33,13 @@ pipeline {
 
        stage('Tests') {
            parallel {
-               stage('unit') {
+               stage('Unit tests') {
                    steps {
                        echo 'unit tests ran'
                    }
                }
 
-               stage('e2e') {
+               stage('E2E') {
                    steps {
                        sh 'echo e2e tests ran'
                    }
