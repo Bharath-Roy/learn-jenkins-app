@@ -3,8 +3,8 @@ pipeline {
 
     environment {
         DOCKER_HOST = 'unix:///var/run/docker.sock' // Set DOCKER_HOST environment variable
-        NETLIFY_SITE_ID = 'PUT YOUR NETLIFY SITE ID HERE'
-        NETLIFY_AUTH_TOKEN = credentials('netlify-token')
+        NETLIFY_SITE_ID = '1ed23efd-47ee-4f2d-b0a0-dbd442c62de9'
+        NETLIFY_AUTH_TOKEN = credentials('netlify-token-2025')
     }
 
     stages {
