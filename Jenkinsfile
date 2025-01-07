@@ -94,16 +94,14 @@ pipeline {
                 '''
             }
         }
-        stage('Approval'){
-            agent {
-                steps{
+        stage('Approval') {
+            steps {
                   sh'''echo added approval stage
-                  
+
                   '''
                     
                     
                 }
-            }
         }
 
         stage('Deploy prod') {
