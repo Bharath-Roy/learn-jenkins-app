@@ -96,12 +96,10 @@ pipeline {
         }
         stage('Approval') {
             steps {
-                  sh '''echo added approval stage
                   timeout(activity: true, time: 15) {
                   input message: 'Do you wish to deploy to production?',ok:'Yes,I am sure!'
                     }
 
-                  '''
                     
                     
                 }
