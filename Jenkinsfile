@@ -97,6 +97,7 @@ pipeline {
         stage('Approval') {
             steps {
                   sh'''echo added approval stage
+                       input ' Do you wish to deploy to production? Yes, I am sure!'
 
                   '''
                     
