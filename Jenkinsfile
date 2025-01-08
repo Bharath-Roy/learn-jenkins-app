@@ -2,6 +2,7 @@ pipeline {
     agent any
 
     environment {
+        DOCKER_HOST = 'unix:///var/run/docker.sock' // Set DOCKER_HOST environment variable
         NETLIFY_SITE_ID = 'YOUR NETLIFY SITE ID'
         NETLIFY_AUTH_TOKEN = credentials('netlify-token')
     }
