@@ -2,8 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_HOST = 'unix:///var/run/docker.sock' // Set DOCKER_HOST environment variable
-        NETLIFY_SITE_ID = '1ed23efd-47ee-4f2d-b0a0-dbd442c62de9'
+        NETLIFY_SITE_ID = '03d4042d-476c-4668-9ce8-34352dad73e4'
         NETLIFY_AUTH_TOKEN = credentials('netlify-token-2025')
     }
 
@@ -70,7 +69,7 @@ pipeline {
 
                     post {
                         always {
-                            publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'Playwright Local', reportTitles: '', useWrapperFileDirectly: true])
+                            publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'Local E2E', reportTitles: '', useWrapperFileDirectly: true])
                         }
                     }
                 }
@@ -90,15 +89,15 @@ pipeline {
                     node_modules/.bin/netlify --version
                     echo "Deploying to staging. Site ID: $NETLIFY_SITE_ID"
                     node_modules/.bin/netlify status
-                    node_modules/.bin/netlify deploy --dir=build --json >deploy-output.json
-                    node_modules/.bin/node-jq -r '.deploy_url' deploy-output.json
+                    node_modules/.bin/netlify deploy --dir=build --json > deploy-output.json
                 '''
                 script {
-                    env.STAGING_URL = sh(script: "node_modules/.bin/node-jq -r '.deploy_url' deploy-output.json", returnStdout:true)
+                    env.STAGING_URL = sh(script: "node_modules/.bin/node-jq -r '.deploy_url' deploy-output.json", returnStdout: true)
                 }
             }
         }
-        stage('staging E2E') {
+
+        stage('Staging E2E') {
             agent {
                 docker {
                     image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
@@ -108,6 +107,7 @@ pipeline {
 
             environment {
                 CI_ENVIRONMENT_URL = "${env.STAGING_URL}"
+            }
 
             steps {
                 sh '''
@@ -117,20 +117,17 @@ pipeline {
 
             post {
                 always {
-                    publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'staging E2E', reportTitles: '', useWrapperFileDirectly: true])
+                    publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'Staging E2E', reportTitles: '', useWrapperFileDirectly: true])
                 }
             }
-         }
-         
+        }
+
         stage('Approval') {
             steps {
-                  timeout(activity: true, time: 15) {
-                  input message: 'Do you wish to deploy to production?',ok:'Yes,I am sure!'
-                    }
-
-                    
-                    
+                timeout(time: 15, unit: 'MINUTES') {
+                    input message: 'Do you wish to deploy to production?', ok: 'Yes, I am sure!'
                 }
+            }
         }
 
         stage('Deploy prod') {
