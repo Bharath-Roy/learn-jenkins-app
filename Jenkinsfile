@@ -77,26 +77,43 @@ pipeline {
             }
         }
 
-        stage('Deploy staging') {
-            agent {
-                docker {
-                    image 'node:18-alpine'
-                    reuseNode true
-                }
-            }
-            steps {
-                sh '''
-                    npm install netlify-cli node-jq
-                    node_modules/.bin/netlify --version
-                    echo "Deploying to staging. Site ID: $NETLIFY_SITE_ID"
-                    node_modules/.bin/netlify status
-                    node_modules/.bin/netlify deploy --dir=build --json > deploy-output.json
-                '''
-                script {
-                    env.STAGING_URL = sh(script: "node_modules/.bin/node-jq -r '.deploy_url' deploy-output.json", returnStdout: true)
-                }
-            }
+stage('Deploy staging') {
+    agent {
+        docker {
+            image 'node:18-alpine'
+            reuseNode true
         }
+    }
+    steps {
+        sh '''
+            # Install required tools
+            npm install netlify-cli node-jq
+
+            # Verify the Netlify CLI version
+            node_modules/.bin/netlify --version
+
+            # Log Netlify site details
+            echo "Deploying to staging. Site ID: $NETLIFY_SITE_ID"
+
+            # Link Netlify site (use NETLIFY_SITE_ID or configure site settings)
+            node_modules/.bin/netlify link --id=$NETLIFY_SITE_ID
+
+            # Check Netlify status
+            node_modules/.bin/netlify status
+
+            # Deploy the site
+            node_modules/.bin/netlify deploy --dir=build --json > deploy-output.json
+        '''
+        script {
+            // Extract the deployed URL from the deploy output JSON
+            env.STAGING_URL = sh(
+                script: "node_modules/.bin/node-jq -r '.deploy_url' deploy-output.json", 
+                returnStdout: true
+            ).trim()
+        }
+    }
+}
+
 
         stage('Staging E2E') {
             agent {
