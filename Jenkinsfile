@@ -125,7 +125,7 @@ pipeline {
             }
 
             environment {
-                CI_ENVIRONMENT_URL = 'YOUR NETLIFY URL'
+                CI_ENVIRONMENT_URL = 'https://peaceful-daffodil-303af5.netlify.app/'
             }
 
             steps {
