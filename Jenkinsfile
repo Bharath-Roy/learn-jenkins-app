@@ -5,7 +5,7 @@ pipeline {
         DOCKER_HOST = 'unix:///var/run/docker.sock' // Set DOCKER_HOST environment variable
         NETLIFY_SITE_ID = '1ed23efd-47ee-4f2d-b0a0-dbd442c62de9'
         NETLIFY_AUTH_TOKEN = credentials('netlify-token-2025')
-        REACT_APP_VERSION = '1.2.3'
+        REACT_APP_VERSION = "1.0.$BUILD_ID"
     }
 
     stages {
@@ -124,13 +124,13 @@ pipeline {
 
             steps {
                 sh '''
-                    node --version
+                     node --version
                     npm install netlify-cli
                     node_modules/.bin/netlify --version
                     echo "Deploying to production. Site ID: $NETLIFY_SITE_ID"
                     node_modules/.bin/netlify status
                     node_modules/.bin/netlify deploy --dir=build --prod
-                    npx playwright test --reporter=html
+                    npx playwright test  --reporter=html
                 '''
             }
 
