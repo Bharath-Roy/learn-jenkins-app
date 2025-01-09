@@ -5,6 +5,7 @@ pipeline {
         DOCKER_HOST = 'unix:///var/run/docker.sock' // Set DOCKER_HOST environment variable
         NETLIFY_SITE_ID = '1ed23efd-47ee-4f2d-b0a0-dbd442c62de9'
         NETLIFY_AUTH_TOKEN = credentials('netlify-token-2025')
+        REACT_APP_VERSION = '1.2.3'
     }
 
     stages {
@@ -108,13 +109,6 @@ pipeline {
             }
         }
 
-        stage('Approval') {
-            steps {
-                timeout(time: 15, unit: 'MINUTES') {
-                    input message: 'Do you wish to deploy to production?', ok: 'Yes, I am sure!'
-                }
-            }
-        }
 
         stage('Deploy prod') {
             agent {
