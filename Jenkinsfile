@@ -116,7 +116,7 @@ pipeline {
         }
 
 
-        stage('Deploy prod') {
+          stage('Deploy prod') {
             agent {
                 docker {
                     image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
@@ -125,12 +125,12 @@ pipeline {
             }
 
             environment {
-                CI_ENVIRONMENT_URL = 'https://peaceful-daffodil-303af5.netlify.app/'
+                CI_ENVIRONMENT_URL = 'https://peaceful-daffodil-303af5.netlify.app/
             }
 
             steps {
                 sh '''
-                     node --version
+                    node --version
                     npm install netlify-cli
                     node_modules/.bin/netlify --version
                     echo "Deploying to production. Site ID: $NETLIFY_SITE_ID"
