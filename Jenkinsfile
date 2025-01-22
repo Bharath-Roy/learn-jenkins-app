@@ -10,6 +10,20 @@ pipeline {
 
     stages {
 
+        stage('AWS') {
+            agent {
+                docker {
+                    image 'amazon/aws-cli'
+                    args "--entrypoint=''"
+                }
+            }
+            steps {
+                sh '''
+                    aws --version
+                '''
+            }
+        }
+
         stage('Build') {
             agent {
                 docker {
@@ -107,8 +121,7 @@ pipeline {
             }
         }
 
-
-          stage('Deploy prod') {
+        stage('Deploy prod') {
             agent {
                 docker {
                     image 'my-playwright'
@@ -123,7 +136,6 @@ pipeline {
             steps {
                 sh '''
                     node --version
-                    npm install netlify-cli
                     netlify --version
                     echo "Deploying to production. Site ID: $NETLIFY_SITE_ID"
                     netlify status
