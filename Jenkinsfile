@@ -43,9 +43,7 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'my-aws', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) { // some block
                 sh '''
                     aws --version
-                    echo "Hello s3!" > intex.html
-                    aws s3 cp intex.html s3://$AWS_s3_BUCKET/intex.html
-                    aws s3 sync . s3://mybucket
+                    aws s3 sync build s3://$AWS_S3_BUCKET
                 '''
                 }
             }
