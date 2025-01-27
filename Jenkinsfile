@@ -10,27 +10,6 @@ pipeline {
 
     stages {
 
-        stage('AWS') {
-            agent {
-                docker {
-                    image 'amazon/aws-cli'
-                    args "--entrypoint=''"
-                }
-            }
-            environment {
-                AWS_s3_BUCKET = 'learn-jenkins-20252201'
-            }
-            steps {
-                withCredentials([usernamePassword(credentialsId: 'my-aws', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) { // some block
-                sh '''
-                    aws --version
-                    echo "Hello s3!" > intex.html
-                    aws s3 cp intex.html s3://$AWS_s3_BUCKET/intex.html
-                '''
-                }
-            }
-        }
-
         stage('Build') {
             agent {
                 docker {
@@ -47,6 +26,27 @@ pipeline {
                     npm run build
                     ls -la
                 '''
+            }
+        }
+        stage('AWS') {
+            agent {
+                docker {
+                    image 'amazon/aws-cli'
+                    args "--entrypoint=''"
+                }
+            }
+            environment {
+                AWS_s3_BUCKET = 'learn-jenkins-20252201'
+            }
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'my-aws', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) { // some block
+                sh '''
+                    aws --version
+                    echo "Hello s3!" > intex.html
+                    aws s3 cp intex.html s3://$AWS_s3_BUCKET/intex.html
+                    aws s3 sync . s3://mybucket
+                '''
+                }
             }
         }
 
