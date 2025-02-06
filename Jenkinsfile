@@ -1,5 +1,9 @@
 pipeline {
     agent any 
+     environment {
+        DOCKER_HOST = 'unix:///var/run/docker.sock' // Set DOCKER_HOST environment variable
+    }
+
 
     stages{
             stage("w/o docker"){
