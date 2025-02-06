@@ -1,55 +1,47 @@
 pipeline {
+
    agent any
    environment {
        DOCKER_HOST = 'unix:///var/run/docker.sock' // Set DOCKER_HOST environment variable
    }
-  
+
    stages {
-       stage(".py-3.8") {
-       agent {
-           docker {
-               image "python:3.8.10"
 
-           }
-       }
-
-       steps{
-           sh'''
-           python3 --version
-           '''
-       }
-
-
-       }
-
-  
-       stage(".py-3.9"){
-           agent{
+       stage("build") {
+            agent {
                docker {
-                   image "python:3.9-alpine"
+                   image 'node:18-alpine'
+                   reuseNode true
+
                }
+            }
+
+           steps {
+
+               sh'''
+                   ls -la
+                   node --version
+                   npm --version
+                   npm ci
+                   npm run build
+                   ls -la
+                  
+
+               '''
            }
-                 steps{
-           sh'''
-           python3 --version
-           '''
        }
-       }
-       stage(".py-3.10"){
-           agent{
-               docker {
-                   image "python:3.10"
-               }
+       stage('Test') {
+           steps {
+               sh '''
+                   echo Test stage
+                   ls build | grep -i index.html
+                   npm test
+               '''
            }
-      steps{
-           sh'''
-           python3 --version
-           '''
        }
+   }
+   post {
+       always {
+           junit 'test-results/junit.xml'
        }
-
    }
-
-   }
-
-
