@@ -1,38 +1,55 @@
 pipeline {
-	agent any
-	environment {
-    	DOCKER_HOST = 'unix:///var/run/docker.sock' // Set DOCKER_HOST environment variable
-	}
+   agent any
+   environment {
+       DOCKER_HOST = 'unix:///var/run/docker.sock' // Set DOCKER_HOST environment variable
+   }
+  
+   stages {
+       stage(".py-3.8") {
+       agent {
+           docker {
+               image "python:3.8.10"
+
+           }
+       }
+
+       steps{
+           sh'''
+           python3 --version
+           '''
+       }
 
 
-	stages {
-    	stage('w/o docker') {
-        	steps {
-            	sh '''
-           	 
-                	echo "without docker"
-                	ls -la
-                    	touch container-no.txt
-             	'''
-        	}
-    	}
-   	 
-    	stage('w/ docker') {
-        	agent {
-            	docker {
-                	image 'node:18-alpine'
-                	reuseNode true
-            	}
-        	}
-        	steps {
-            	sh '''
-           	 
-            	echo "with docker"
-            	ls -la
-            	touch container-yes.txt
-            	'''
-        	}
-    	}
-	}
-}
+       }
+
+  
+       stage(".py-3.9"){
+           agent{
+               docker {
+                   image "python:3.9-alpine"
+               }
+           }
+                 steps{
+           sh'''
+           python3 --version
+           '''
+       }
+       }
+       stage(".py-3.10"){
+           agent{
+               docker {
+                   image "python:3.10"
+               }
+           }
+      steps{
+           sh'''
+           python3 --version
+           '''
+       }
+       }
+
+   }
+
+   }
+
 
