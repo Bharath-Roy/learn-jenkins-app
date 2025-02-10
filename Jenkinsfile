@@ -5,6 +5,7 @@ pipeline {
    environment {
        DOCKER_HOST = 'unix:///var/run/docker.sock' // Set DOCKER_HOST environment variable
        REACT_APP_VERSION = "1.0.$BUILD_ID"
+       AWS_DEFAULT_REGION = 'ap-south-1'
    }
 
    stages {
