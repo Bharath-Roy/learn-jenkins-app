@@ -6,6 +6,9 @@ pipeline {
        DOCKER_HOST = 'unix:///var/run/docker.sock' // Set DOCKER_HOST environment variable
        REACT_APP_VERSION = "1.0.$BUILD_ID"
        AWS_DEFAULT_REGION = 'ap-south-1'
+       AWS_ECS_CLUSTER = 'Learn-JenkinsApp-Service-prod'
+       AWS_ECS_SERVICE_PROD = 'Learn-JenkinsApp-Service-prod'
+       AWS_ECS_TO_PROD = 'learnJenkinsApp-TaskDefinition-prod'
    }
 
    stages {
@@ -23,9 +26,9 @@ pipeline {
                    aws --version
                    yum install jq -y
                    LATEST_TD_REVISON=$(aws ecs register-task-definition --cli-input-json file://aws/task-definition-prod.json | jq '.taskDefinition.revision')
-                   echo $LATEST_TD_REVISON--service Learn-JenkinsApp-Service-prod --task-definition learnJenkinsApp-TaskDefinition-prod:$LAT
-                   aws ecs update-service --cluster learn-JenkinsApp-Cluster-prod --service Learn-JenkinsApp-Service-prod --task-definition learnJenkinsApp-TaskDefinition-prod:$LATEST_TD_REVISON
-                   aws ecs wait services-stable --cluster learn-JenkinsApp-Cluster-prod --services Learn-JenkinsApp-Service-prod
+                   echo $LATEST_TD_REVISON
+                   aws ecs update-service --cluster $AWS_ECS_CLUSTER --service $AWS_ECS_SERVICE_PROD --task-definition $AWS_ECS_TO_PROD :$LATEST_TD_REVISON
+                   aws ecs wait services-stable --cluster AWS_ECS_CLUSTER --services $AWS_ECS_SERVICE_PROD
                '''
                }
            }
