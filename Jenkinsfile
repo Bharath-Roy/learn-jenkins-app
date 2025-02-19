@@ -6,7 +6,7 @@ pipeline {
        DOCKER_HOST = 'unix:///var/run/docker.sock' // Set DOCKER_HOST environment variable
        REACT_APP_VERSION = "1.0.$BUILD_ID"
        AWS_DEFAULT_REGION = 'ap-south-1'
-       AWS_ECS_CLUSTER = 'Learn-JenkinsApp-Service-prod'
+       AWS_ECS_CLUSTER = 'learn-JenkinsApp-Cluster-prod'
        AWS_ECS_SERVICE_PROD = 'Learn-JenkinsApp-Service-prod'
        AWS_ECS_TO_PROD = 'learnJenkinsApp-TaskDefinition-prod'
    }
