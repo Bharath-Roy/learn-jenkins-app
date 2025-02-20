@@ -9,38 +9,41 @@ pipeline {
        AWS_ECS_CLUSTER = 'learn-JenkinsApp-Cluster-prod'
        AWS_ECS_SERVICE_PROD = 'Learn-JenkinsApp-Service-prod'
        AWS_ECS_TO_PROD = 'learnJenkinsApp-TaskDefinition-prod'
-   }
-
-    stages {
+        }
+    stages{
        stage('Build') {
-           agent {
-               docker {
-                   image 'node:18-alpine'
-                   reuseNode true
-               }
-           }
-           steps {
-               sh '''
-                   node --version
-                   npm --version
-                   npm ci
-                   npm run build
-               '''
-           }
-       }
-
-        stage ('Build Docker image'){
             agent {
                 docker {
-                   image 'amazon/aws-cli'
-                   reuseNode true
-               }
-                   args "-u root --entrypoint=''"
-             steps{
-                sh 'docker build -t myjenkinsapp .'
-                 }
-           }
+                    image 'node:18-alpine'
+                    reuseNode true
+                }
+            }
+            steps {
+                sh '''
+                    node --version
+                    npm --version
+                    npm ci
+                    npm run build
+                '''
+            }
         }
+
+        stage('Build Docker image') {
+            agent {
+                docker {
+                    image 'amazon/aws-cli'
+                    reuseNode true
+                    args "-u root -v /var/run/docker.sock:/var/run/docker.sock --entrypoint=''"
+                }
+            }
+
+            steps {
+                sh '''
+                    amazon-linux-extras install docker
+                    docker build -t myjenkinsapp .
+                '''
+            }
+        } 
 
         stage('Deploy to AWS') {
            agent {
@@ -62,5 +65,5 @@ pipeline {
                }
            }
        }
-   }
+    }
 }
